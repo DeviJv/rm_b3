@@ -75,6 +75,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
                         ToggleButtons(
                           color: Colors.white,
                           selectedColor: Colors.pink,
+                          disabledBorderColor: true,
                           children: <Widget>[
                             Icon(FontAwesomeIcons.heart)
                           ],
