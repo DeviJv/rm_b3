@@ -12,7 +12,7 @@ class DestinationScreen extends StatefulWidget {
 }
 
 class _DestinationScreenState extends State<DestinationScreen> {
-  List<bool> _wishlist =[false];
+  List<bool> _wishlist = [false];
 
   Text _buildRatingStars(int rating) {
     String stars = '';
@@ -75,12 +75,16 @@ class _DestinationScreenState extends State<DestinationScreen> {
                         ToggleButtons(
                           color: Colors.white,
                           selectedColor: Colors.pink,
-                          disabledBorderColor: true,
-                          children: <Widget>[
-                            Icon(FontAwesomeIcons.heart)
-                          ],
+                          renderBorder: false,
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(200),
+                            bottomRight: Radius.circular(200),
+                            topLeft: Radius.circular(200),
+                            topRight: Radius.circular(200),
+                          ),
+                          children: <Widget>[Icon(FontAwesomeIcons.solidHeart)],
                           isSelected: _wishlist,
-                          onPressed: (int toggle){
+                          onPressed: (int toggle) {
                             setState(() {
                               _wishlist[toggle] = !_wishlist[toggle];
                             });
