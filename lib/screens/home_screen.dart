@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rm_b3/screens/search_screen.dart';
 // import 'package:rm_b3/models/destination_model.dart';
 import 'package:rm_b3/widget/destination_carousel.dart';
 import 'package:rm_b3/widget/hotel_carousel.dart';
@@ -12,8 +13,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  int _currentTab = 0;
+  // int _currentTab = 0;
+  
   List<IconData> _icons = [
+    
     FontAwesomeIcons.listUl,
     FontAwesomeIcons.utensils,
     FontAwesomeIcons.coffee,
@@ -23,12 +26,14 @@ class _HomePageState extends State<HomePage> {
   Widget _buildIcon(int index) {
     return GestureDetector(
       //gestur tap detection
-      onTap: () {
-        setState(() {
-          _selectedIndex = index;
-        });
-        print(_selectedIndex); //ganti list view di bawah (NYUSUL)
-      },
+      onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => SearchScreen(
+                        // destination: destination,
+                      ),
+                    ),
+                  ),
       child: Container(
         height: 60.0,
         width: 60.0,
@@ -119,23 +124,7 @@ class _HomePageState extends State<HomePage> {
             HotelCarousel(),
           ],
         )),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentTab,
-          onTap: (int value){
-            _currentTab = value;
-          },
-          items: [
-            BottomNavigationBarItem(
-                title: SizedBox.shrink(), icon: Icon(Icons.home, size: 30.0)),
-            BottomNavigationBarItem(
-                title: SizedBox.shrink(), icon: Icon(Icons.search, size: 30.0)),
-            BottomNavigationBarItem(
-                title: SizedBox.shrink(),
-                icon: CircleAvatar(
-                radius: 15.0,
-                backgroundImage: AssetImage('assets/images/avatar.png'),
-            )),
-          ],
-        ));
+        
+        );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rm_b3/models/destination_model.dart';
 import 'package:rm_b3/screens/destination_screen.dart';
+import 'package:rm_b3/screens/search_screen.dart';
 
 class DestinationCarousel extends StatelessWidget {
   @override
@@ -23,7 +24,14 @@ class DestinationCarousel extends StatelessWidget {
                     color: Colors.grey[800]),
               ),
               GestureDetector(
-                onTap: () => ('Lihat Semua'),
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => SearchScreen(
+                        // destination: destination,
+                      ),
+                    ),
+                  ),
                 child: Text(
                   'Lihat Semua',
                   style: TextStyle(
