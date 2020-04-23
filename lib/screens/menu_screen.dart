@@ -3,15 +3,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rm_b3/models/activity_model.dart';
 import 'package:rm_b3/models/destination_model.dart';
 
-class DestinationScreen extends StatefulWidget {
+class MenuScreen extends StatefulWidget {
   final Destination destination;
-  DestinationScreen({this.destination});
+  MenuScreen({this.destination});
 
   @override
-  _DestinationScreenState createState() => _DestinationScreenState();
+  _MenuScreenState createState() => _MenuScreenState();
 }
 
-class _DestinationScreenState extends State<DestinationScreen> {
+class _MenuScreenState extends State<MenuScreen> {
   List<bool> _wishlist = [false];
 
   Text _buildRatingStars(int rating) {

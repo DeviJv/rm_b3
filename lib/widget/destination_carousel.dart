@@ -1,10 +1,14 @@
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rm_b3/models/destination_model.dart';
-import 'package:rm_b3/screens/destination_screen.dart';
+import 'package:rm_b3/screens/menu_screen.dart';
 import 'package:rm_b3/screens/search_screen.dart';
 
 class DestinationCarousel extends StatelessWidget {
+  final int scrollaxis;
+
+  const DestinationCarousel({Key key, this.scrollaxis}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -44,9 +48,9 @@ class DestinationCarousel extends StatelessWidget {
           ),
         ),
         Container(
-          height: 280.0,
+          height: scrollaxis == 1 ? 550.0 : 280.0,
           child: ListView.builder(
-              scrollDirection: Axis.horizontal,
+              scrollDirection: scrollaxis == 1 ?  Axis.vertical : Axis.horizontal,
               itemCount: destinations.length,
               itemBuilder: (BuildContext context, int index) {
                 Destination destination = destinations[index];
@@ -54,22 +58,26 @@ class DestinationCarousel extends StatelessWidget {
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => DestinationScreen(
+                      builder: (_) => MenuScreen(
                         destination: destination,
                       ),
                     ),
                   ),
                   child: Container(
-                    margin: EdgeInsets.all(10.0),
+                    margin: scrollaxis == 1 ? EdgeInsets.all(10.0) : EdgeInsets.all(10.0),
                     width: 210.0,
+                    height: 250.0,
+                    // color: Colors.red,
                     child: Stack(
-                      alignment: Alignment.topCenter,
+                      alignment: scrollaxis == 1 ? Alignment.topCenter : Alignment.topCenter,
+                      
                       children: <Widget>[
                         Positioned(
-                          bottom: 15.0,
+                          bottom: scrollaxis == 1 ? 0.0 : 15.0,
+                          top : scrollaxis == 1 ? 100 : 125.0,
                           child: Container(
                             height: 120.0,
-                            width: 200.0,
+                            width: scrollaxis == 1 ? 380.0 : 200.0,
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(10.0)),
@@ -112,7 +120,7 @@ class DestinationCarousel extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(18.0),
                                   child: Image(
                                     height: 180.0,
-                                    width: 180.0,
+                                    width: scrollaxis == 1 ? 340.0 : 180.0,
                                     image: AssetImage(destination.imageUrl),
                                     fit: BoxFit.cover,
                                   ),
@@ -123,6 +131,7 @@ class DestinationCarousel extends StatelessWidget {
                                 bottom: 10.0,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
                                     Text(destination.city,
                                         style: TextStyle(

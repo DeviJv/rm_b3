@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rm_b3/widget/destination_carousel.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -8,10 +9,10 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: Text(
             'Rumah Makan',
@@ -44,11 +45,11 @@ class _SearchScreenState extends State<SearchScreen> {
           centerTitle: true,
           primary: true,
         ),
-        backgroundColor: Colors.red,
         body: Container(
-          child: Text('Nganggap Kecil'),
+          padding: EdgeInsets.symmetric(vertical: 20.0),
+          height: 750.0,
+          child: DestinationCarousel(scrollaxis:1,), // jika 1 scrollaxis listview nya jadi vertical
         ),
-      ),
-    );
+      );
   }
 }
