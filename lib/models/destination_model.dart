@@ -1,6 +1,7 @@
 import 'package:rm_b3/models/activity_model.dart';
 
 class Destination {
+  int id;
   String imageUrl;
   String city;
   String country;
@@ -8,6 +9,7 @@ class Destination {
   List<Activity> activities;
 
   Destination({
+    this.id,
     this.imageUrl,
     this.city,
     this.country,
@@ -45,6 +47,7 @@ List<Activity> activities = [
 
 List<Destination> destinations = [
   Destination(
+    id: 0,
     imageUrl: 'assets/images/paket_nyawah.png',
     city: 'Paket Nyawah',
     country: 'Rp 150,000',
@@ -52,6 +55,7 @@ List<Destination> destinations = [
     activities: activities,
   ),
   Destination(
+    id: 1,
     imageUrl: 'assets/images/Ayam_Geprek.png',
     city: 'Ayam Geprek',
     country: 'Rp 80,000',
@@ -59,6 +63,7 @@ List<Destination> destinations = [
     activities: activities,
   ),
   Destination(
+    id: 2,
     imageUrl: 'assets/images/Sate_Ayam.png',
     city: 'Sate Ayam',
     country: 'Rp 60,000',
@@ -66,6 +71,7 @@ List<Destination> destinations = [
     activities: activities,
   ),
   Destination(
+    id: 3,
     imageUrl: 'assets/images/es_teler.png',
     city: 'Es Teler',
     country: 'Rp 20,000',
@@ -73,6 +79,7 @@ List<Destination> destinations = [
     activities: activities,
   ),
   Destination(
+    id: 4,
     imageUrl: 'assets/images/teh_manis.png',
     city: 'Es Teh Manis',
     country: 'Rp 10,000',

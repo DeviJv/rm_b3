@@ -1,29 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rm_b3/screens/cart_page.dart';
+// import 'package:rm_b3/models/destination_model.dart';
 import 'package:rm_b3/screens/home_screen.dart';
 import 'package:rm_b3/screens/profile_screen.dart';
 import 'package:rm_b3/screens/search_screen.dart';
+import 'events/cart_bloc.dart';
+import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Rumah Makan B3',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: Color(0xFF3EBACE),
-        accentColor: Color(0xFFD8ECF1),
-        scaffoldBackgroundColor: Color(0xFFF3F5F7),
+    return ChangeNotifierProvider<CartBloc>(
+      child: MaterialApp(
+        title: 'Rumah Makan B3',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primaryColor: Color(0xFF3EBACE),
+          accentColor: Color(0xFFD8ECF1),
+          scaffoldBackgroundColor: Color(0xFFF3F5F7),
+        ),
+        home: BottomNavigation(),
       ),
-      home: BottomNavigation(),
+      create: (BuildContext context) {
+        return CartBloc();
+      },
     );
   }
 }
 
 class BottomNavigation extends StatefulWidget {
+  final int destinationId;
+
+  const BottomNavigation({Key key, this.destinationId}) : super(key: key);
+
   @override
   _BottomNavigationState createState() => _BottomNavigationState();
 }
@@ -31,12 +45,15 @@ class BottomNavigation extends StatefulWidget {
 class _BottomNavigationState extends State<BottomNavigation> {
   int _currentPage = 0;
 
+  // const _destinationId = widget.id;
   final List<Widget> _children = [
     //inport halaman content
     HomePage(),
     SearchScreen(),
     ProfileScreen(),
   ];
+
+  @override
 
   // void getData() {
   //   databaseReference
@@ -49,7 +66,17 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   @override
   Widget build(BuildContext context) {
+    var bloc = Provider.of<CartBloc>(context);
+    int totalCount = 0;
+    if (bloc.cart.length > 0) {
+      totalCount = bloc.cart.values.reduce((a, b) => a + b);
+    }
+    // print(widget.destinationId);
     return Scaffold(
+      extendBody: true, //fixed height jika Punya list view builder
+      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomPadding: true,
+
       body: _children[_currentPage],
       bottomNavigationBar: BottomNavigationBar(
         onTap: (int index) {
@@ -76,15 +103,21 @@ class _BottomNavigationState extends State<BottomNavigation> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: null,
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => CartPage(
+              // destination: destination,
+            ),
+          ),
+        ),
+        heroTag: widget.destinationId,
         backgroundColor: Theme.of(context).primaryColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Row(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              // crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 Stack(
                   children: <Widget>[
@@ -94,7 +127,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                         horizontal: 15.0,
                       ),
                       child: Icon(
-                        FontAwesomeIcons.shoppingBasket,
+                        FontAwesomeIcons.shoppingCart,
                         size: 22.0,
                         color: Colors.white,
                       ),
@@ -107,7 +140,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                           color: Colors.redAccent,
                         ),
                         child: Text(
-                          '0',
+                          '$totalCount',
                           style: TextStyle(
                             fontSize: 15.0,
                             color: Colors.white,

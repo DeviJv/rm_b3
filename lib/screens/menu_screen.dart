@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:rm_b3/events/cart_bloc.dart';
+// import 'package:rm_b3/main.dart';
 import 'package:rm_b3/models/activity_model.dart';
 import 'package:rm_b3/models/destination_model.dart';
 
@@ -13,7 +16,7 @@ class MenuScreen extends StatefulWidget {
 
 class _MenuScreenState extends State<MenuScreen> {
   List<bool> _wishlist = [false];
-
+  // int id =0;
   Text _buildRatingStars(int rating) {
     String stars = '';
     for (int i = 0; i < rating; i++) {
@@ -31,6 +34,10 @@ class _MenuScreenState extends State<MenuScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var bloc = Provider.of<CartBloc>(context);
+    if (bloc.cart.length > 0) {
+    }
+
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -39,7 +46,9 @@ class _MenuScreenState extends State<MenuScreen> {
               Container(
                   height: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30.0),
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(30.0),
+                          bottomRight: Radius.circular(30.0)),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black26,
@@ -112,13 +121,13 @@ class _MenuScreenState extends State<MenuScreen> {
                         Icon(
                           FontAwesomeIcons.locationArrow,
                           size: 15.0,
-                          color: Colors.white70,
+                          color: Colors.white,
                         ),
                         SizedBox(width: 5.0),
                         Text(
                           widget.destination.country,
                           style: TextStyle(
-                            color: Colors.white70,
+                            color: Colors.white,
                             letterSpacing: 1.2,
                             fontSize: 22.0,
                           ),
@@ -131,10 +140,39 @@ class _MenuScreenState extends State<MenuScreen> {
               Positioned(
                 right: 20.0,
                 bottom: 20.0,
-                child: Icon(
-                  Icons.location_on,
-                  color: Colors.white70,
-                  size: 25.0,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal:13.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.redAccent,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.all(9.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                                bloc.addToCart(widget.destination.id);
+                              },
+                              child: Icon(
+                                FontAwesomeIcons.shoppingCart,
+                                size: 20.0,
+                                color: Colors.white,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -274,4 +312,5 @@ class _MenuScreenState extends State<MenuScreen> {
       ),
     );
   }
+
 }
