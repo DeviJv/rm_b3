@@ -4,10 +4,10 @@ import 'package:rm_b3/models/destination_model.dart';
 import 'package:rm_b3/screens/menu_screen.dart';
 import 'package:rm_b3/screens/search_screen.dart';
 
-class DestinationCarousel extends StatelessWidget {
+class Produklistview extends StatelessWidget {
   final int scrollaxis;
 
-  const DestinationCarousel({Key key, this.scrollaxis}) : super(key: key);
+  const Produklistview({Key key, this.scrollaxis}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(

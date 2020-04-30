@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:rm_b3/widget/destination_carousel.dart';
+import 'package:rm_b3/widget/produk_listview.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -48,7 +48,7 @@ class _SearchScreenState extends State<SearchScreen> {
         body: Container(
           padding: EdgeInsets.symmetric(vertical: 20.0),
           height: 750.0,
-          child: DestinationCarousel(scrollaxis:1,), // jika 1 scrollaxis listview nya jadi vertical
+          child: Produklistview(scrollaxis:1,), // jika 1 scrollaxis listview nya jadi vertical
         ),
       );
   }

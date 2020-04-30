@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rm_b3/screens/search_screen.dart';
 // import 'package:rm_b3/models/destination_model.dart';
-import 'package:rm_b3/widget/destination_carousel.dart';
+import 'package:rm_b3/widget/produk_listview.dart';
 import 'package:rm_b3/widget/hotel_carousel.dart';
 
 class HomePage extends StatefulWidget {
@@ -119,7 +119,7 @@ class _HomePageState extends State<HomePage> {
                   .toList(),
             ),
             SizedBox(height: 20.0),
-            DestinationCarousel(),
+            Produklistview(),
             SizedBox(height: 20.0),
             HotelCarousel(),
           ],
