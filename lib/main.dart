@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:rm_b3/screens/cart_page.dart';
 // import 'package:rm_b3/models/destination_model.dart';
 import 'package:rm_b3/screens/home_screen.dart';
@@ -24,10 +25,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<CartBloc>(
       child: MaterialApp(
-        title: 'Rumah Makan B3',
+        title: '',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primaryColor: Color(0xFF3EBACE),
+          primaryColor: Color(0xfffbb448),
           accentColor: Color(0xFFD8ECF1),
           scaffoldBackgroundColor: Color(0xFFF3F5F7),
         ),
@@ -119,6 +120,50 @@ class _BottomNavigationState extends State<BottomNavigation> {
     }
     // print(widget.destinationId);
     return Scaffold(
+      appBar: AppBar(
+        title: RichText(
+          text: TextSpan(
+              text: 'Sem',
+              style: GoogleFonts.portLligatSans(
+                textStyle: Theme.of(context).textTheme.display1,
+                fontSize: 30,
+                fontWeight: FontWeight.w700,
+                color: Color(0xffe46b10),
+              ),
+              children: [
+                TextSpan(
+                  text: 'ba',
+                  style: TextStyle(color: Colors.black, fontSize: 30),
+                ),
+                TextSpan(
+                  text: 'ko',
+                  style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
+                ),
+              ]),
+        ),
+        leading: GestureDetector(
+          onTap: () => ('Menu Di Pencet'),
+          child: Icon(
+            FontAwesomeIcons.hamburger,
+            color: Colors.white,
+            size: 20.0,
+          ),
+        ),
+        actions: <Widget>[
+          Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {},
+                child: Icon(
+                  FontAwesomeIcons.bell,
+                  color: Colors.white,
+                  size: 20.0,
+                ),
+              )),
+        ],
+        centerTitle: true,
+        primary: true,
+      ),
       extendBody: true, //fixed height jika Punya list view builder
       resizeToAvoidBottomInset: true,
       resizeToAvoidBottomPadding: true,
@@ -138,7 +183,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
           ),
           BottomNavigationBarItem(
             title: SizedBox.shrink(),
-            icon: Icon(Icons.local_pizza, size: 30.0),
+            icon: Icon(Icons.pie_chart_outlined, size: 30.0),
           ),
           BottomNavigationBarItem(
               title: SizedBox.shrink(),
