@@ -17,6 +17,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _loadUserData();
     super.initState();
   }
+
+  
+
   _loadUserData() async{
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var user = jsonDecode(localStorage.getString('user'));

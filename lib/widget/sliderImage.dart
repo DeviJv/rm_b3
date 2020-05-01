@@ -9,7 +9,7 @@ class SliderImage extends StatelessWidget {
 
     return Container(
       height: MediaQuery.of(context).size.height / 3,
-      width: MediaQuery.of(context).size.width,
+      // width: MediaQuery.of(context).size.width / 1,
       child: Column(
         
         children: <Widget>[
@@ -17,7 +17,7 @@ class SliderImage extends StatelessWidget {
             options: CarouselOptions(
               
               aspectRatio: 16 / 9,
-              viewportFraction: 0.3,
+              viewportFraction: 0.8,
               initialPage: 0,
               enableInfiniteScroll: true,
               reverse: false,

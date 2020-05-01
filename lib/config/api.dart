@@ -11,7 +11,13 @@ class Network{
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     token = jsonDecode(localStorage.getString('token'))['token'];
   }
-  
+  checkServer() async{
+    var fullUrl = 'http:192.168.43.63:8000/';
+    return await http.get(
+        fullUrl,
+        headers: _setHeaders()
+    );
+  }
   authData(data, apiUrl) async {
     var fullUrl = _url + apiUrl;
     return await http.post(

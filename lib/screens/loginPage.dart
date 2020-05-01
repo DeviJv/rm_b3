@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rm_b3/config/api.dart';
+import 'package:rm_b3/config/scale_animation.dart';
 import 'package:rm_b3/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rm_b3/screens/signup.dart';
@@ -382,36 +383,31 @@ class _LoginPageState extends State<LoginPage> {
           ),
         )));
   }
-  void _login() async{
+
+  void _login() async {
     setState(() {
       _isLoading = true;
     });
-    var data = {
-      'email' : email,
-      'password' : password
-    };
+    var data = {'email': email, 'password': password};
 
     var res = await Network().authData(data, '/login');
     var body = json.decode(res.body);
-    
+
     // print(res.body);
-    if(body['success']){
+    if (body['success']) {
       SharedPreferences localStorage = await SharedPreferences.getInstance();
       localStorage.setString('token', json.encode(body['token']));
       localStorage.setString('user', json.encode(body['user']));
-      Navigator.push(
-          context,
-          new MaterialPageRoute(
-              builder: (context) => BottomNavigation() // routes home page
-          ),
+      Navigator.pushReplacement(
+        context,
+        ScaleAnimation(widget : MyApp())
       );
-    }else{
+    } else {
       _showMsg(body['message']);
     }
 
     setState(() {
       _isLoading = false;
     });
-
   }
 }
