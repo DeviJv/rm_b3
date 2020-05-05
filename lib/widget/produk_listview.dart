@@ -21,9 +21,9 @@ class Produklistview extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  'Top Paket',
+                  'KEBUTUHAN POKOK',
                   style: TextStyle(
-                      fontSize: 22.0,
+                      fontSize: 18.5,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.5,
                       color: Colors.grey[800]),
@@ -58,7 +58,6 @@ class Produklistview extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.0),
                   child: TextField(
-                  
                     enableSuggestions: true,
                     style: TextStyle(
                       color: Colors.grey[700],
@@ -70,7 +69,6 @@ class Produklistview extends StatelessWidget {
                         Icons.search,
                         size: 25.0,
                       ),
-
                       hintText: 'Cari Yang Kamu Disini!',
                     ),
                   ),
@@ -84,7 +82,7 @@ class Produklistview extends StatelessWidget {
               // color: Colors.red,
               height: scrollaxis == 1 ? 550 : 280.0,
               child: ListView.builder(
-                shrinkWrap: true,
+                  shrinkWrap: true,
                   scrollDirection:
                       scrollaxis == 1 ? Axis.vertical : Axis.horizontal,
                   itemCount: destinations.length,
@@ -155,7 +153,7 @@ class Produklistview extends StatelessWidget {
                               child: Stack(
                                 children: <Widget>[
                                   Hero(
-                                    tag: destination.imageUrl,
+                                    tag: destination.id,
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(18.0),
                                       child: Image(
@@ -190,7 +188,7 @@ class Produklistview extends StatelessWidget {
                                             ),
                                             SizedBox(width: 5.0),
                                             Text(
-                                              destination.country,
+                                              destination.country.toString(),
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   letterSpacing: 1.2),

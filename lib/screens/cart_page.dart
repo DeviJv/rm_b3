@@ -1,86 +1,377 @@
+import 'package:bloc_pattern/bloc_pattern.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:rm_b3/events/cart_bloc.dart';
+import 'package:rm_b3/bloc/cartListBloc.dart';
 import 'package:rm_b3/models/destination_model.dart';
-import 'package:rm_b3/screens/menu_screen.dart';
+import 'package:rm_b3/screens/checkout.dart';
 
 class CartPage extends StatelessWidget {
-  final Destination destination;
+  // final Destination destination;
 
-  CartPage({Key key, this.destination}) : super(key: key);
+  // CartPage({Key key, this.destination}) : super(key: key);
+
+  final CartListBloc bloc = BlocProvider.getBloc<CartListBloc>();
 
   @override
   Widget build(BuildContext context) {
-    var bloc = Provider.of<CartBloc>(context);
-    var cart = bloc.cart;
-    if (cart.length == 0) {
-      Navigator.pop(context);
-    }
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Pesanan Anda",
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-      ),
-      body: Container(
-        // height: 550.0,
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 20.0),
-          child: ListView.builder(
-            itemCount: cart.length,
-            itemBuilder: (context, index) {
-              int cartId = cart.keys.toList()[index];
-              int count = cart[cartId];
-              Destination destination = destinations[cartId];
+    List<Destination> destinations;
+    return StreamBuilder(
+      stream: bloc.listStream,
+      builder: (context, snapshot) {
+        if (snapshot.data != null) {
+          destinations = snapshot.data;
+          return Scaffold(
+            body: SafeArea(
+              child: Container(
+                child: CartBody(destinations),
+              ),
+            ),
+            bottomNavigationBar: BottomBar(destinations),
+          );
+        } else {
+          return Container();
+        }
+      },
+    );
+  }
+}
 
-              return ListTile(
-                leading: GestureDetector(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => MenuScreen(
-                        destination: destination,
-                      ),
-                    ),
-                  ),
-                  child: Container(
-                    height: 70,
-                    width: 70,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(destination.imageUrl),
-                        fit: BoxFit.fitWidth,
-                      ),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
+class BottomBar extends StatelessWidget {
+  final List<Destination> destinations;
+
+  BottomBar(this.destinations);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(left: 35, bottom: 25),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          totalAmount(destinations),
+          Divider(
+            height: 1,
+          ),
+          // persons(),
+          SizedBox(
+            height: 10,
+          ),
+          GestureDetector(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => Checkout(),
+              ),
+            ),
+            child: Container(
+              width: MediaQuery.of(context).size.width / 1,
+              margin: EdgeInsets.only(right: 25),
+              padding: EdgeInsets.all(25),
+              decoration: BoxDecoration(
+                color: Color(0xfffeb324),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Center(
+                child: Text(
+                  'Mau Bayar Dong',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700),
                 ),
-                title: Column(
-                  // mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(destination.city),
-                    Text('Qty: $count'),
-                  ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container persons() {
+    return Container(
+      margin: EdgeInsets.only(right: 10),
+      padding: EdgeInsets.symmetric(vertical: 30),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            'Persons',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          CustomPersonWidget(),
+        ],
+      ),
+    );
+  }
+
+  Container totalAmount(List<Destination> destination) {
+    return Container(
+      margin: EdgeInsets.only(right: 10),
+      padding: EdgeInsets.all(25),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            'Total:',
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.w300),
+          ),
+          Text(
+            "\$${returnTotalAmount(destinations)}",
+            style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String returnTotalAmount(List<Destination> destinations) {
+    double totalAmount = 0.0;
+    for (int i = 0; i < destinations.length; i++) {
+      totalAmount = totalAmount + destinations[i].country * destinations[i].qty;
+    }
+    return totalAmount.toStringAsFixed(2);
+  }
+}
+
+class CustomPersonWidget extends StatefulWidget {
+  @override
+  _CustomPersonWidgetState createState() => _CustomPersonWidgetState();
+}
+
+class _CustomPersonWidgetState extends State<CustomPersonWidget> {
+  int noOfPerson = 1;
+  double _buttonWidth = 30;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(right: 25),
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey[300], width: 2),
+          borderRadius: BorderRadius.circular(10)),
+      padding: EdgeInsets.symmetric(),
+      width: 120,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          SizedBox(
+            width: _buttonWidth,
+            height: _buttonWidth,
+            child: FlatButton(
+              onPressed: () {
+                setState(() {
+                  if (noOfPerson > 1) {
+                    noOfPerson--;
+                  }
+                });
+              },
+              child: Text(
+                "-",
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+              ),
+            ),
+          ),
+          Text(
+            noOfPerson.toString(),
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(
+            width: _buttonWidth,
+            height: _buttonWidth,
+            child: FlatButton(
+              onPressed: () {
+                setState(() {
+                  if (noOfPerson > 1) {
+                    noOfPerson++;
+                  }
+                });
+              },
+              child: Text(
+                "+",
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CartBody extends StatelessWidget {
+  final List<Destination> destinations;
+  CartBody(this.destinations);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(35, 40, 25, 0),
+      child: Column(
+        children: <Widget>[
+          CustomAppBar(),
+          title(),
+          Expanded(
+            flex: 1,
+            child:
+                destinations.length > 0 ? destinationList() : noItemContainer(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container noItemContainer() {
+    return Container(
+      child: Center(
+          child: Text(
+        'Pesanan Anda Masih Kosong',
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+          color: Colors.grey[700],
+          fontSize: 20,
+        ),
+      )),
+    );
+  }
+
+  ListView destinationList() {
+    return ListView.builder(
+      itemCount: destinations.length,
+      itemBuilder: (builder, index) {
+        return CartListItem(destination: destinations[index]);
+      },
+    );
+  }
+
+  Widget title() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 35),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Pesanan',
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 35,
                 ),
-                trailing: IconButton(
-                  icon: Icon(Icons.delete),
-                  iconSize: 20.0,
-                  color: Colors.red,
-                  // elevation: 1.0,
-                  splashColor: Colors.blueGrey,
-                  onPressed: () {
-                    bloc.clear(cartId);
-                  },
+              ),
+              Text(
+                'Saya',
+                style: TextStyle(
+                  fontWeight: FontWeight.w300,
+                  fontSize: 35,
                 ),
-              );
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CartListItem extends StatelessWidget {
+  final Destination destination;
+
+  CartListItem({@required this.destination});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 25),
+      child: ItemContent(destination: destination),
+    );
+  }
+}
+
+class ItemContent extends StatelessWidget {
+  final Destination destination;
+
+  ItemContent({@required this.destination});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(5),
+            child: Image(
+              image: AssetImage(destination.imageUrl),
+              fit: BoxFit.fitHeight,
+              height: 55,
+              width: 80,
+            ),
+          ),
+          RichText(
+            text: TextSpan(
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.w700,
+              ),
+              children: [
+                TextSpan(text: destination.qty.toString()),
+                TextSpan(text: " X "),
+                TextSpan(text: destination.city),
+              ],
+            ),
+          ),
+          Text(
+            "\$${destination.qty * destination.country}",
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              color: Colors.grey[400],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CustomAppBar extends StatelessWidget {
+  final CartListBloc bloc = BlocProvider.getBloc<CartListBloc>();
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.all(5),
+          child: GestureDetector(
+            child: Icon(
+              CupertinoIcons.back,
+              size: 30,
+            ),
+            onTap: () {
+              Navigator.pop(context);
             },
           ),
         ),
-      ),
+        GestureDetector(
+          child: Padding(
+            padding: EdgeInsets.all(5.0),
+            child: Icon(
+              CupertinoIcons.delete,
+              size: 30,
+            ),
+          ),
+          onTap: () {
+            Navigator.pop(context);
+          },
+        ),
+      ],
     );
   }
 }

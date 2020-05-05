@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:rm_b3/screens/search_screen.dart';
+import 'package:rm_b3/widget/hotel_carousel.dart';
 // import 'package:rm_b3/models/destination_model.dart';
 import 'package:rm_b3/widget/produk_listview.dart';
-import 'package:rm_b3/widget/hotel_carousel.dart';
 import 'package:rm_b3/widget/sliderImage.dart';
 
 class HomePage extends StatefulWidget {
@@ -53,11 +54,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    
+
     return Scaffold(
       body: SafeArea(
-        child: ListView(
+          child: ListView(
         // listView Atas
-        padding: EdgeInsets.symmetric(vertical: 15.0), //margin top
+        // padding: EdgeInsets.symmetric(vertical: 15.0), //margin top
         children: <Widget>[
           // Padding(
           //   padding: EdgeInsets.only(left: 18.0, right: 120.0),
@@ -83,10 +86,49 @@ class _HomePageState extends State<HomePage> {
           //       )
           //       .toList(),
           // ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 10),
+            padding: EdgeInsets.all(13),
+            child: TextField(
+              enableSuggestions: true,
+              cursorColor: Colors.transparent,
+              readOnly: true,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => SearchScreen(),
+                ),
+              ),
+              style: TextStyle(
+                color: Colors.grey[700],
+              ),
+              decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.transparent,
+                    ),
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  fillColor: Colors.grey[200],
+                  filled: true,
+                  hasFloatingPlaceholder: true,
+                  hintText: 'Cari Apaa Yuaaaa?',
+                  focusedBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  prefixIcon: Icon(
+                    Icons.search,
+                    size: 25.0,
+                  )),
+            ),
+          ),
+          SizedBox(height: 10.0),
           SliderImage(),
-          SizedBox(height: 20.0),
+          SizedBox(height: 10.0),
+          // Kategori(),
           Produklistview(),
-          SizedBox(height: 20.0),
+          SizedBox(height: 10.0),
+
           HotelCarousel(),
         ],
       )),

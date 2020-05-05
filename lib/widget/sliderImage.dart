@@ -9,15 +9,15 @@ class SliderImage extends StatelessWidget {
 
     return Container(
       height: MediaQuery.of(context).size.height / 3,
-      // width: MediaQuery.of(context).size.width / 1,
+      width: MediaQuery.of(context).size.width / 1,
       child: Column(
         
         children: <Widget>[
           CarouselSlider(
             options: CarouselOptions(
               
-              aspectRatio: 16 / 9,
-              viewportFraction: 0.8,
+              aspectRatio:  16 / 9,
+              viewportFraction: 1.0,
               initialPage: 0,
               enableInfiniteScroll: true,
               reverse: false,
@@ -25,21 +25,18 @@ class SliderImage extends StatelessWidget {
               autoPlayInterval: Duration(seconds: 3),
               autoPlayAnimationDuration: Duration(milliseconds: 800),
               autoPlayCurve: Curves.fastOutSlowIn,
-              enlargeCenterPage: true,
+              enlargeCenterPage: false,
               scrollDirection: Axis.horizontal,
             ),
             items: destination
                 .map(
-                  (item) => Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image(
-                        image: AssetImage(item.imageUrl),
-                        fit: BoxFit.cover,
-                        height: MediaQuery.of(context).size.height / 2,
-                        width: MediaQuery.of(context).size.width / 1,
-                      ),
+                  (item) => ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image(
+                      image: AssetImage(item.imageUrl),
+                      fit: BoxFit.cover,
+                      height: MediaQuery.of(context).size.height / 2,
+                      width: MediaQuery.of(context).size.width / 1,
                     ),
                   ),
                 )

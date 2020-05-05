@@ -14,9 +14,9 @@ class HotelCarousel extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                'Top Wisata',
+                'KEBUTUHAN SAYURAN',
                 style: TextStyle(
-                    fontSize: 22.0,
+                    fontSize: 13.0,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.5,
                     color: Colors.grey[800]),
@@ -40,6 +40,7 @@ class HotelCarousel extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemCount: hotels.length,
               itemBuilder: (BuildContext context, int index) {
+                
                 Hotel hotel = hotels[index];
                 return Container(
                   margin: EdgeInsets.all(10.0),
