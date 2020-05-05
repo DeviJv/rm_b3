@@ -87,8 +87,8 @@ class _HomePageState extends State<HomePage> {
           //       .toList(),
           // ),
           Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
-            padding: EdgeInsets.all(13),
+            margin: EdgeInsets.symmetric(vertical: 0),
+            padding: EdgeInsets.all(9),
             child: TextField(
               enableSuggestions: true,
               cursorColor: Colors.transparent,
@@ -122,7 +122,7 @@ class _HomePageState extends State<HomePage> {
                   )),
             ),
           ),
-          SizedBox(height: 10.0),
+          SizedBox(height: 5.0),
           SliderImage(),
           SizedBox(height: 10.0),
           // Kategori(),

@@ -10,6 +10,7 @@ import 'package:rm_b3/screens/profile_screen.dart';
 import 'package:rm_b3/screens/search_screen.dart';
 import 'package:rm_b3/screens/welcomePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:geolocator/geolocator.dart';
 
 void main() => runApp(MyApp());
 
@@ -81,7 +82,6 @@ class BottomNavigation extends StatefulWidget {
 
   const BottomNavigation({Key key, this.destinationId}) : super(key: key);
 
-  
   @override
   _BottomNavigationState createState() => _BottomNavigationState();
 }
@@ -92,14 +92,70 @@ class _BottomNavigationState extends State<BottomNavigation>
   String name;
   AnimationController _controller;
   Animation<double> _animation;
+  final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
 
-  initState() {
-    super.initState();
+  Position _currentPosition;
+  String _currentAddress;
+
+  @override
+  void initState() {
     _controller = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this, value: 0.1);
     _animation = CurvedAnimation(parent: _controller, curve: Curves.bounceOut);
 
     _controller.forward();
+    _getCurrentLocation();
+    super.initState();
+  }
+
+   _getCurrentLocation() {
+    geolocator
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+        .then((Position position) {
+      setState(() {
+        _currentPosition = position;
+            _showMsg(_currentPosition);
+
+      });
+
+      _getAddressFromLatLng();
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+  _getAddressFromLatLng() async {
+    try {
+      List<Placemark> p = await geolocator.placemarkFromCoordinates(
+          _currentPosition.latitude, _currentPosition.longitude);
+
+      Placemark place = p[0];
+
+      setState(() {
+        _currentAddress =
+            "${place.locality}, ${place.postalCode}, ${place.country}";
+
+      });
+
+    } catch (e) {
+      print(e);
+    }
+  }
+
+
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  _showMsg(msg) {
+    final snackBar = SnackBar(
+      content: Text(msg.toString()),
+      duration: Duration(seconds: 100),
+      action: SnackBarAction(
+        label: 'Close',
+        onPressed: () {
+          // Some code to undo the change!
+        },
+      ),
+    );
+    _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
   final List<Widget> _children = [
@@ -167,6 +223,7 @@ class _BottomNavigationState extends State<BottomNavigation>
     final CartListBloc bloc = BlocProvider.getBloc<CartListBloc>();
     return Scaffold(
       appBar: _appBar(),
+      key:_scaffoldKey,
       extendBody: true, //fixed height jika Punya list view builder
       resizeToAvoidBottomInset: true,
       resizeToAvoidBottomPadding: true,
