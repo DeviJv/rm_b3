@@ -4,7 +4,7 @@ import 'package:rm_b3/models/kategori_mode.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Network{
-  final String _url = 'http://192.168.43.63:8000/api/v1';
+  final String _url = 'http://192.168.43.63:8080/api/public/api/v1';
   //if you are using android studio emulator, change localhost to 10.0.2.2
   var token;
   Client http = Client();
@@ -14,7 +14,7 @@ class Network{
     token = jsonDecode(localStorage.getString('token'))['token'];
   }
   checkServer() async{
-    var fullUrl = 'http:192.168.43.63:8000/';
+    var fullUrl = 'http://192.168.43.63:8080/api/public/api/v1';
     return await http.get(
         fullUrl,
         headers: _setHeaders()

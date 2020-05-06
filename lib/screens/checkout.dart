@@ -21,15 +21,20 @@ class Checkout extends StatefulWidget {
 
 class _CheckoutState extends State<Checkout> {
   bool _isLoading = false;
+  bool _isTransfer = false;
   final _formKey = GlobalKey<FormState>();
 
   String _waktuMlm; //Ini untuk menyimpan value data gender
   String _waktuPagi;
+  String _valuePayment;
   List _listMlm = ["06-09", "10-12", "13-15", "16-18"]; //Array gender
   List _listPagi = ["06-09", "10-12", "13-15", "16-18"];
+  List _listPaymentMethod = ['Transfer', 'COD'];
   var name;
   var phone;
   var alamat;
+  var patokan;
+  var payment;
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   _showMsg(msg) {
@@ -289,6 +294,55 @@ class _CheckoutState extends State<Checkout> {
     );
   }
 
+  Widget _entryPayment() {
+    // if (time.hour > ifmlm) {
+    //   datejadi = newdateMlm;
+    // } else {
+    //   datejadi = newdatePagi;
+    // }
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Pembayaran',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              DropdownButton(
+                hint: Text("Mau Bayar Pake Apa?"),
+                value: _valuePayment,
+                items: _listPaymentMethod.map((value) {
+                  return DropdownMenuItem(
+                    child: Text('$value aja'),
+                    value: value,
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _valuePayment = value;
+                    if(value == 'Transfer'){
+                      _isTransfer = true;
+                    }else{
+                      _isTransfer = false;
+                    }
+                  });
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _submitButton() {
     return InkWell(
       onTap: () {
@@ -377,7 +431,11 @@ class _CheckoutState extends State<Checkout> {
           _entryPhone(),
           _entryWaktuPengiriman(),
           _entryAlamat(),
-          _entryUpload(),
+          _entryPayment(),
+          Visibility(
+            visible: _isTransfer,
+            child: _entryUpload(),
+          ),
         ],
       ),
     );
@@ -404,12 +462,12 @@ class _CheckoutState extends State<Checkout> {
         extendBody: true,
         body: SingleChildScrollView(
             child: Container(
-          height: MediaQuery.of(context).size.height / 1,
+          height: 900,
           child: Stack(
             children: <Widget>[
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 20),
-                margin: EdgeInsets.only(bottom: 10),
+                margin: EdgeInsets.only(bottom: 50),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,

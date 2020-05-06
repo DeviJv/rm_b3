@@ -209,7 +209,7 @@ class CartBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(35, 40, 25, 0),
+      padding: EdgeInsets.fromLTRB(25, 20, 25, 0),
       child: Column(
         children: <Widget>[
           CustomAppBar(),
@@ -285,9 +285,53 @@ class CartListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Draggable(
+      maxSimultaneousDrags: 1,
+      data: destination,
+      child: DraggableChild(destination: destination),
+      feedback: DraggableChildFeedBack(destination: destination),
+      childWhenDragging: destination.qty > 1
+          ? DraggableChild(destination: destination)
+          : Container(),
+    );
+  }
+}
+
+class DraggableChild extends StatelessWidget {
+  const DraggableChild({
+    Key key,
+    @required this.destination,
+  }) : super(key: key);
+
+  final Destination destination;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 25),
       child: ItemContent(destination: destination),
+    );
+  }
+}
+
+class DraggableChildFeedBack extends StatelessWidget {
+  const DraggableChildFeedBack({
+    Key key,
+    @required this.destination,
+  }) : super(key: key);
+
+  final Destination destination;
+
+  @override
+  Widget build(BuildContext context) {
+    return Opacity(
+      opacity: 0.7,
+      child: Material(
+        child: Container(
+          margin: EdgeInsets.only(bottom: 25),
+          child: ItemContent(destination: destination),
+        ),
+      ),
     );
   }
 }
@@ -359,19 +403,37 @@ class CustomAppBar extends StatelessWidget {
             },
           ),
         ),
-        GestureDetector(
-          child: Padding(
-            padding: EdgeInsets.all(5.0),
-            child: Icon(
-              CupertinoIcons.delete,
-              size: 30,
-            ),
-          ),
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
+        DragTargetWidget(),
       ],
+    );
+  }
+}
+class DragTargetWidget extends StatefulWidget {
+  @override
+  _DragTargetWidgetState createState() => _DragTargetWidgetState();
+}
+
+class _DragTargetWidgetState extends State<DragTargetWidget> {
+  final CartListBloc listBloc = BlocProvider.getBloc<CartListBloc>();
+  @override
+  Widget build(BuildContext context) {
+    return DragTarget<Destination>(
+
+      onWillAccept: (Destination destination){
+        return true;
+      },
+      onAccept: (Destination destination){
+        listBloc.removeFromList(destination); // Hapus Cart
+      },
+      builder: (context,incoming,rejected){
+        return Padding(
+          padding: EdgeInsets.all(5.0),
+          child: Icon(
+            CupertinoIcons.delete,
+            size: 30,
+          ),
+        );
+      },
     );
   }
 }

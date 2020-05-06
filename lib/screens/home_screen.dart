@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rm_b3/screens/search_screen.dart';
 import 'package:rm_b3/widget/hotel_carousel.dart';
+import 'package:rm_b3/widget/kategori.dart';
 // import 'package:rm_b3/models/destination_model.dart';
 import 'package:rm_b3/widget/produk_listview.dart';
 import 'package:rm_b3/widget/sliderImage.dart';
@@ -125,8 +126,8 @@ class _HomePageState extends State<HomePage> {
           SizedBox(height: 5.0),
           SliderImage(),
           SizedBox(height: 10.0),
-          // Kategori(),
-          Produklistview(),
+          Kategori(),
+          // Produklistview(),
           SizedBox(height: 10.0),
 
           HotelCarousel(),
