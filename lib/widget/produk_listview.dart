@@ -64,7 +64,7 @@ class Produklistview extends StatelessWidget {
                     ),
                     decoration: InputDecoration(
                       fillColor: Colors.white,
-                      hasFloatingPlaceholder: true,
+                      // hasFloatingPlaceholder: true,
                       icon: Icon(
                         Icons.search,
                         size: 25.0,

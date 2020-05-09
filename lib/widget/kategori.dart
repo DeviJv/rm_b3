@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:rm_b3/config/api.dart';
 import 'package:rm_b3/models/kategori_mode.dart';
+import 'package:rm_b3/screens/ProdukByKategori.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class Kategori extends StatefulWidget {
@@ -72,7 +73,9 @@ class _KategoriState extends State<Kategori> {
           );
         } else {
           return Center(
-            child: CircularProgressIndicator(),
+            child: LinearProgressIndicator(
+              
+            ),
           );
         }
       },
@@ -81,7 +84,7 @@ class _KategoriState extends State<Kategori> {
 }
 
 Widget _buildListView(List<KategoriModel> kategoris) {
-   var url = 'http://192.168.43.63:8080/api';
+  var url = 'http://192.168.43.63/api';
 
   return Container(
     height: 250,
@@ -91,28 +94,38 @@ Widget _buildListView(List<KategoriModel> kategoris) {
           new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
       itemBuilder: (context, index) {
         KategoriModel kategori = kategoris[index];
-        return Card(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              FadeInImage.memoryNetwork(
-                placeholder: kTransparentImage,
-                image: '${url}${kategori.icon}',
-              ),
-              // Text('${url}${kategori.icon}'),
-              SizedBox(height: 5),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    kategori.nama,
-                    style: TextStyle(
-                      color: Colors.grey[700],
-                    ),
+        return GestureDetector(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => ProdukByKategori(
+                  id: kategori.id,
                   ),
-                ],
-              ),
-            ],
+            ),
+          ),
+          child: Card(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                FadeInImage.memoryNetwork(
+                  placeholder: kTransparentImage,
+                  image: '${url}${kategori.icon}',
+                ),
+                // Text('${url}${kategori.icon}'),
+                SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      kategori.nama,
+                      style: TextStyle(
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },

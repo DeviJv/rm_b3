@@ -1,13 +1,17 @@
 import 'dart:convert';
 import 'package:http/http.dart' show Client;
 import 'package:rm_b3/models/kategori_mode.dart';
+import 'package:rm_b3/models/produk_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Network{
-  final String _url = 'http://192.168.43.63:8080/api/public/api/v1';
+  final String _url = 'http://192.168.43.63/api/public/api/v1';
   //if you are using android studio emulator, change localhost to 10.0.2.2
   var token;
+
+  final int id;
   Client http = Client();
+  Network({this.id});
   
   _getToken() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
@@ -47,6 +51,17 @@ class Network{
       return null;
     }
   }
+  Future<List<ProdukModel>> produkByIdKategori(int id) async {
+    final response = await http.get("$_url/getProdukByKategori/$id");
+
+    if (response.statusCode == 200) {
+      return produkFromJson(response.body);
+    } else {
+      return null;
+    }
+  }
+
+  
 
 
   _setHeaders() => {

@@ -112,7 +112,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                   fillColor: Colors.grey[200],
                   filled: true,
-                  hasFloatingPlaceholder: true,
                   hintText: 'Cari Apaa Yuaaaa?',
                   focusedBorder: InputBorder.none,
                   errorBorder: InputBorder.none,

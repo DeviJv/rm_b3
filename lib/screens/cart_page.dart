@@ -2,8 +2,10 @@ import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rm_b3/bloc/cartListBloc.dart';
+import 'package:rm_b3/bloc/listStyleColorBloc.dart';
 import 'package:rm_b3/models/destination_model.dart';
 import 'package:rm_b3/screens/checkout.dart';
+import 'dart:core';
 
 class CartPage extends StatelessWidget {
   // final Destination destination;
@@ -324,13 +326,21 @@ class DraggableChildFeedBack extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorBloc colorBloc = BlocProvider.getBloc<ColorBloc>();
     return Opacity(
       opacity: 0.7,
       child: Material(
-        child: Container(
-          margin: EdgeInsets.only(bottom: 25),
-          child: ItemContent(destination: destination),
-        ),
+        child: StreamBuilder<Object>(
+            stream: colorBloc.colorStream,
+            builder: (context, snapshot) {
+              return Container(
+                margin: EdgeInsets.only(bottom: 25),
+                child: ItemContent(destination: destination),
+                decoration: BoxDecoration(
+                  color: snapshot.data != null ? snapshot.data : Colors.white
+                ),
+              );
+            }),
       ),
     );
   }
@@ -392,7 +402,7 @@ class CustomAppBar extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.all(5),
+          padding: EdgeInsets.all(0),
           child: GestureDetector(
             child: Icon(
               CupertinoIcons.back,
@@ -408,6 +418,7 @@ class CustomAppBar extends StatelessWidget {
     );
   }
 }
+
 class DragTargetWidget extends StatefulWidget {
   @override
   _DragTargetWidgetState createState() => _DragTargetWidgetState();
@@ -415,19 +426,26 @@ class DragTargetWidget extends StatefulWidget {
 
 class _DragTargetWidgetState extends State<DragTargetWidget> {
   final CartListBloc listBloc = BlocProvider.getBloc<CartListBloc>();
+  final ColorBloc colorBloc = BlocProvider.getBloc<ColorBloc>();
+
   @override
   Widget build(BuildContext context) {
     return DragTarget<Destination>(
-
-      onWillAccept: (Destination destination){
+      onWillAccept: (Destination destination) {
+        colorBloc.setColor(Colors.red);
         return true;
       },
-      onAccept: (Destination destination){
+      
+      // onLeave: (Destination destination){
+      //   colorBloc.setColor(Colors.white);
+      // },
+      onAccept: (Destination destination) {
         listBloc.removeFromList(destination); // Hapus Cart
+        colorBloc.setColor(Colors.white);
       },
-      builder: (context,incoming,rejected){
+      builder: (context, incoming, rejected) {
         return Padding(
-          padding: EdgeInsets.all(5.0),
+          padding: EdgeInsets.all(0.0),
           child: Icon(
             CupertinoIcons.delete,
             size: 30,

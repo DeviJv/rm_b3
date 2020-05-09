@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rm_b3/bloc/cartListBloc.dart';
+import 'package:rm_b3/bloc/listStyleColorBloc.dart';
 import 'package:rm_b3/models/destination_model.dart';
 import 'package:rm_b3/screens/cart_page.dart';
 import 'package:rm_b3/screens/home_screen.dart';
@@ -11,7 +12,9 @@ import 'package:rm_b3/screens/search_screen.dart';
 import 'package:rm_b3/screens/welcomePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:animations/animations.dart';
 
+const double _fabDimension = 56.0;
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -23,9 +26,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      blocs: [
-        Bloc((i) => CartListBloc()),
-      ],
+      blocs: [Bloc((i) => CartListBloc()), Bloc((i) => ColorBloc())],
       child: MaterialApp(
         title: '',
         debugShowCheckedModeBanner: false,
@@ -93,7 +94,7 @@ class _BottomNavigationState extends State<BottomNavigation>
   AnimationController _controller;
   Animation<double> _animation;
   final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
-
+  ContainerTransitionType _transitionType = ContainerTransitionType.fade;
   Position _currentPosition;
   String _currentAddress;
 
@@ -108,14 +109,13 @@ class _BottomNavigationState extends State<BottomNavigation>
     super.initState();
   }
 
-   _getCurrentLocation() {
+  _getCurrentLocation() {
     geolocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
         .then((Position position) {
       setState(() {
         _currentPosition = position;
-            _showMsg(_currentPosition);
-
+        _showMsg(_currentPosition);
       });
 
       _getAddressFromLatLng();
@@ -134,14 +134,11 @@ class _BottomNavigationState extends State<BottomNavigation>
       setState(() {
         _currentAddress =
             "${place.locality}, ${place.postalCode}, ${place.country}";
-
       });
-
     } catch (e) {
       print(e);
     }
   }
-
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   _showMsg(msg) {
@@ -177,7 +174,7 @@ class _BottomNavigationState extends State<BottomNavigation>
         text: TextSpan(
             text: 'Sem',
             style: GoogleFonts.portLligatSans(
-              textStyle: Theme.of(context).textTheme.display1,
+              textStyle: Theme.of(context).textTheme.headline1,
               fontSize: 30,
               fontWeight: FontWeight.w700,
               color: Color(0xffe46b10),
@@ -223,7 +220,7 @@ class _BottomNavigationState extends State<BottomNavigation>
     final CartListBloc bloc = BlocProvider.getBloc<CartListBloc>();
     return Scaffold(
       appBar: _appBar(),
-      key:_scaffoldKey,
+      key: _scaffoldKey,
       extendBody: true, //fixed height jika Punya list view builder
       resizeToAvoidBottomInset: true,
       resizeToAvoidBottomPadding: true,
@@ -265,67 +262,75 @@ class _BottomNavigationState extends State<BottomNavigation>
               )),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => CartPage(
-                // destination: destination,
-                ),
+      floatingActionButton: OpenContainer(
+        closedColor: Colors.amber,
+        transitionType: _transitionType,
+        openBuilder: (BuildContext context, VoidCallback _) {
+          return CartPage();
+        },
+        closedElevation: 6.0,
+        closedShape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(_fabDimension / 2),
           ),
         ),
-        heroTag: widget.destinationId,
-        backgroundColor: Theme.of(context).primaryColor,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Row(
+        closedBuilder: (BuildContext context, VoidCallback openContainer) {
+          return SizedBox(
+            height: _fabDimension,
+            width: _fabDimension,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Stack(
+                Row(
                   children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 8.0,
-                        horizontal: 15.0,
-                      ),
-                      child: Icon(
-                        FontAwesomeIcons.shoppingCart,
-                        size: 22.0,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(33.0, 0.0, 0.0, 0.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: Colors.redAccent,
+                    Stack(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 8.0,
+                            horizontal: 15.0,
+                          ),
+                          child: Icon(
+                            FontAwesomeIcons.shoppingCart,
+                            size: 22.0,
+                            color: Colors.white,
+                          ),
                         ),
-                        child: StreamBuilder(
-                            stream: bloc.listStream,
-                            builder: (context, snapshot) {
-                              List<Destination> destinations = snapshot.data;
-                              int length = destinations != null
-                                  ? destinations.length
-                                  : 0;
-                              return Text(
-                                length.toString(),
-                                style: TextStyle(
-                                  fontSize: 15.0,
-                                  color: Colors.white,
-                                  // backgroundColor: Colors.redAccent,
-                                ),
-                              );
-                            }),
-                      ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(33.0, 0.0, 0.0, 0.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              color: Colors.redAccent,
+                            ),
+                            child: StreamBuilder(
+                                stream: bloc.listStream,
+                                builder: (context, snapshot) {
+                                  List<Destination> destinations =
+                                      snapshot.data;
+                                  int length = destinations != null
+                                      ? destinations.length
+                                      : 0;
+                                  return Text(
+                                    length.toString(),
+                                    style: TextStyle(
+                                      fontSize: 15.0,
+                                      color: Colors.white,
+                                      // backgroundColor: Colors.redAccent,
+                                    ),
+                                  );
+                                }),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
